@@ -1,26 +1,25 @@
-## Portfolio-Website
-Portfolio website built using HTML5, CSS3, JavaScript, and jQuery.
+## Maaz Portfolio Website
+Modern personal portfolio built with HTML, CSS, and JavaScript.
 
-<a href="https://jigarsable.netlify.app/" target="_blank">**Visit Now** 🚀</a>
+### Contact Backend (Resend + Netlify Functions)
+This portfolio now sends contact messages through your own backend endpoint instead of a public form service.
 
+#### Files added/updated
+- `netlify/functions/contact.js`
+- `netlify.toml`
+- `.env.example`
+- `assets/js/script.js` (frontend now posts to `/.netlify/functions/contact`)
 
-## 📌 Tech Stack
-[![HTML](https://img.shields.io/badge/html5%20-%23E34F26.svg?&style=for-the-badge&logo=html5&logoColor=white)](https://github.com/jigar-sable/Portfolio-Website/search?l=html)&nbsp;
-[![CSS](https://img.shields.io/badge/css3%20-%231572B6.svg?&style=for-the-badge&logo=css3&logoColor=white)](https://github.com/jigar-sable/Portfolio-Website/search?l=css)&nbsp;
-[![JS](https://img.shields.io/badge/javascript%20-%23323330.svg?&style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://github.com/jigar-sable/Portfolio-Website/search?l=javascript)
-<img alt="jQuery" src="https://img.shields.io/badge/jquery-%230769AD.svg?style=for-the-badge&logo=jquery&logoColor=white"/>
+#### Setup steps
+1. Create a [Resend](https://resend.com) account.
+2. In Resend, verify a sender identity/domain.
+3. In Netlify, open your site settings and add environment variables:
+   - `RESEND_API_KEY`
+   - `CONTACT_FROM_EMAIL` (must be a verified sender in Resend)
+   - `CONTACT_TO_EMAIL` (`maazalamgir02@gmail.com`)
+4. Deploy the site on Netlify.
+5. Submit the contact form from your live site and verify email delivery.
 
-### Extras : 
-Particle.js, Typed.js, Tilt.js, Scroll Reveal, Tawk.to, Font Awesome and JSON
-
-## 📌 Sneak Peek of Main Page 🙈 :
-![mockup720](https://user-images.githubusercontent.com/64949957/124947013-1f682080-e02d-11eb-977e-df3bbd4fa838.png)
-![ss](https://user-images.githubusercontent.com/64949957/159113640-d92665a8-f614-42b3-8456-66b97fc2e651.png)
-
-
-<h2>📬 Contact</h2>
-
-Feel free to reach me through the below handles if you'd like to contact me.
-
-[![linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jigar-sablee)
-[![instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/jigarsable.dev)
+#### Notes
+- Local static previews will not send mail unless run via Netlify functions.
+- API keys stay server-side in Netlify environment variables.
