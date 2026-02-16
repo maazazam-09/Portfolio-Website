@@ -17,7 +17,10 @@ const toast = document.getElementById("toast");
 const ambientLayer = document.querySelector(".ambient");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-const CONTACT_ENDPOINT = "/.netlify/functions/contact";
+const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const CONTACT_ENDPOINT = isLocalPreview
+  ? "https://formsubmit.co/ajax/maazalamgir02@gmail.com"
+  : "/.netlify/functions/contact";
 
 let allProjects = [];
 let activeFilter = "all";
@@ -418,23 +421,50 @@ if (contactForm) {
       contactSubmit.disabled = true;
       setFormStatus("Sending message...", "");
 
-      const response = await fetch(CONTACT_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      let response;
+      let result;
+      let ok = false;
 
-      const result = await response.json();
-      const ok = response.ok && result.success === true;
+      if (isLocalPreview) {
+        const localPayload = new FormData();
+        localPayload.append("name", payload.name);
+        localPayload.append("email", payload.email);
+        localPayload.append("message", payload.message);
+        localPayload.append("_subject", "New Portfolio Contact Message (Local Test)");
+        localPayload.append("_template", "table");
+        localPayload.append("_captcha", "false");
+
+        response = await fetch(CONTACT_ENDPOINT, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: localPayload,
+        });
+
+        result = await response.json().catch(() => ({}));
+        ok = response.ok && (result.success === true || result.success === "true");
+      } else {
+        response = await fetch(CONTACT_ENDPOINT, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        result = await response.json().catch(() => ({}));
+        ok = response.ok && result.success === true;
+      }
       if (!ok) throw new Error("Delivery failed");
 
       contactForm.reset();
       document.querySelectorAll(".field-hint").forEach((hint) => hint.classList.remove("error"));
       document.querySelectorAll(".contact-form input, .contact-form textarea").forEach((el) => el.classList.remove("invalid"));
-      setFormStatus("Message sent successfully. I will respond within 24 hours.", "success");
+      setFormStatus(isLocalPreview
+        ? "Message sent in local test mode. Please verify inbox."
+        : "Message sent successfully. I will respond within 24 hours.", "success");
       showToast("Message sent successfully");
     } catch {
       setFormStatus("Unable to send right now. Please try again in a moment.", "error");
